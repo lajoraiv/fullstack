@@ -68,27 +68,9 @@ const App = () => {
       <Header text="Phonebook"></Header>
       <Filter newFilter={newFilter} showFiltered={showFiltered} handleFilterChange={handleFilterChange}></Filter>
       <Header text="add a new"></Header>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input
-            value={newName}
-            onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input
-            value={newNumber}
-            onChange={handleNumberChange}/>
-        </div>
-        <div>
-        <button type="submit">add</button>
-        </div>
-      </form>
+      <AddNumber addPerson ={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
       <Header text="Numbers"></Header>
-      <div>
-        {personsToShow.map(person => 
-          <div key={person.name}>{person.name} {person.number}</div>
-        )}
-      </div>
+      <Phonebook personsToShow={personsToShow} />
     </div>
   )
 }
@@ -106,9 +88,34 @@ const Filter = (props) => (
         <div>
           filter shown with: <input
             value={props.newFilter}
-            onChange={handleFilterChange}/>
+            onChange={props.handleFilterChange}/>
         </div>
       </form>
+)
+
+const AddNumber = (props) => (
+  <form onSubmit={props.addPerson}>
+        <div>
+          name: <input
+            value={props.newName}
+            onChange={props.handleNameChange}/>
+        </div>
+        <div>
+          number: <input
+            value={props.newNumber}
+            onChange={props.handleNumberChange}/>
+        </div>
+        <div>
+        <button type="submit">add</button>
+        </div>
+      </form>
+)
+const Phonebook = (props) => (
+  <div>
+    {props.personsToShow.map(person => 
+      <div key={person.name}>{person.name} {person.number}</div>
+    )}
+  </div>
 )
 
 export default App
