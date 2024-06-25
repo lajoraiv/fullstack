@@ -7,6 +7,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [showAll, setShowAll] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
   
   
   useEffect(() => {
@@ -44,10 +46,17 @@ const App = () => {
             .update(id, personObject).then(returnedPerson => {
               setPersons(persons.map(person => person.id !== id ? person : returnedPerson ))
             })
+            .catch(error => {
+              console.log("failed to replace the number", error)
+              setErrorMessage(`Information of ${newName} has already been removed from the server.`)
+              setTimeout(() => {setErrorMessage(null)}, 5000)
+            })
         }
         setNewName('')
         setNewNumber('')
         matchFound = true
+        setSuccessMessage(`${newName}'s number changed to ${newNumber}`)
+        setTimeout(() => {setSuccessMessage(null)}, 5000)
         return
       }
     }
@@ -55,10 +64,17 @@ const App = () => {
         personService
         .create(personObject)
           .then(returnedPerson => {
-          setPersons(persons.concat(returnedPerson))
-          setNewName('')
-          setNewNumber('')
-        })
+            setPersons(persons.concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            console.log("failed to add new person", error)
+            setErrorMessage(`Could not add ${newName} to phonebook.`)
+            setTimeout(() => {setErrorMessage(null)}, 5000)
+          })
+        setSuccessMessage(`Added ${newName}`)
+        setTimeout(() => {setSuccessMessage(null)}, 5000)
     }
   }
 
@@ -90,13 +106,21 @@ const App = () => {
           .then(responseData => {
             setPersons(persons.filter(n => n.id !== id))
           })
-          .catch(error => { console.log("It didnt work", error)})
+          .catch(error => { 
+            console.log("It didnt work", error)
+            setErrorMessage(`Couldn't find ${name}. Maybe it has been removed already.`)
+            setTimeout(() => {setErrorMessage(null)}, 5000)
+          })
+          setSuccessMessage(`${name} deleted`)
+          setTimeout(() => {setSuccessMessage(null)}, 5000)
         }
   }
 
   return (
     <div>
       <Header text="Phonebook"></Header>
+      <Notification message={successMessage} />
+      <Error message={errorMessage} />
       <Filter newFilter={newFilter} showFiltered={showFiltered} handleFilterChange={handleFilterChange}></Filter>
       <Header text="add a new"></Header>
       <AddNumber addPerson ={addPerson} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange} />
@@ -154,5 +178,29 @@ const App = () => {
       )}
     </div>
   )
+
+  const Notification = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className="success">
+        {message}
+      </div>
+    )
+  }
+
+  const Error = ({ message }) => {
+    if (message === null) {
+      return null
+    }
+  
+    return (
+      <div className="error">
+        {message}
+      </div>
+    )
+  }
 
 export default App
