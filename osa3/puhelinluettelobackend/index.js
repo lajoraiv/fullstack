@@ -97,6 +97,7 @@ app.get('/api/people/:id', (request, response) => {
     response.status(204).end()
   })
   
-  const PORT = process.env.PORT || 3001app.listen(PORT, () => {
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })
