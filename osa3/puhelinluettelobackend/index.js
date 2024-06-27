@@ -48,8 +48,14 @@ app.post('/api/people', (request, response) => {
   
    if (!body.name || !body.number) {
      return response.status(400).json({ 
-       error: 'content missing' 
+       error: 'Name or number missing' 
      })
+   }
+  
+   if (people.some(e => e.name === body.name)) {
+    return response.status(400).json({ 
+      error: 'name must be unique' 
+    })
    }
  
    const person = {
@@ -67,7 +73,8 @@ app.get('/api/people/:id', (request, response) => {
    const id = Number(request.params.id)
    const person = people.find(person => person.id === id)
    if (person) {
-     response.json(person)
+     response.send(`<p>Name: ${person.name}</p>
+      <p>Number: ${person.number}</p>`)
    } else {
      console.log('x')
      response.status(404).end()
