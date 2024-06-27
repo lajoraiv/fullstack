@@ -4,6 +4,8 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
+app.use(express.static('dist'))
+
 var morgan = require('morgan')
 morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
@@ -34,6 +36,10 @@ let people = [
 ]
 
 app.use(express.json())
+
+app.get('/', (request, response) => {
+  response.send('<h1>Hello World!</h1>')
+})
 
 app.get('/info', (request, response) => {
     var d = new Date()
