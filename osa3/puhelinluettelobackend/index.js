@@ -6,31 +6,18 @@ const Person = require('./models/person')
 
 app.use(express.static('dist'))
 
-let people = [
-    /*{
-      name: "Arto Hellas",
-      number: "040-123456",
-      id: 1
-    },
-    {
-      name: "Ada Lovelace",
-      number: "39-44-5323523",
-      id: 2
-    },
-    {
-      name: "Dan Abramov",
-      number: "12-43-234345",
-      id: 3
-    },
-    {
-      name: "Mary Poppendieck",
-      number: "39-23-6423122",
-      id: "4"
-    }*/
-]
-
 var morgan = require('morgan')
 morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error)
+}
 
 const cors = require('cors')
 
@@ -79,7 +66,7 @@ app.post('/api/people', (request, response) => {
   })
 })
   
-app.put('/api/notes/:id', (request, response, next) => {
+app.put('/api/people/:id', (request, response, next) => {
   const body = request.body
 
   const person = {
@@ -103,17 +90,6 @@ app.delete('/api/people/:id', (request, response) => {
 })
 
 app.use(unknownEndpoint)
-
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  }
-
-  next(error)
-}
-
 app.use(errorHandler)
 
 const PORT = process.env.PORT
