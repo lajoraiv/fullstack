@@ -4,7 +4,7 @@ require('dotenv').config()
 
 const Person = require('./models/person')
 
-
+app.use(express.static('dist'))
 
 let people = [
     /*{
@@ -28,16 +28,16 @@ let people = [
       id: "4"
     }*/
 ]
-app.use(express.static('dist'))
-
-const cors = require('cors')
-app.use(cors())
 
 var morgan = require('morgan')
 morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+
+const cors = require('cors')
+
+app.use(cors())
+app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :type'))
 
-app.use(express.json())
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
@@ -55,12 +55,6 @@ app.get('/api/people', (request, response) => {
   })
 })
 
-const generateId = () => {
-    const maxId = people.length > 0
-      ? Math.max(...people.map(n => n.id))
-      : 0
-    return maxId + 1
-}
   
 app.post('/api/people', (request, response) => {
    const body = request.body
@@ -74,7 +68,6 @@ app.post('/api/people', (request, response) => {
    const person = new Person({
      name: body.name,
      number: body.number,
-     id: generateId(),
    })
  
    person.save().then(savedPerson => {
@@ -83,9 +76,18 @@ app.post('/api/people', (request, response) => {
 })
   
 app.get('/api/people/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    response.json(person)
-  })
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
   
 app.delete('/api/people/:id', (request, response) => {
