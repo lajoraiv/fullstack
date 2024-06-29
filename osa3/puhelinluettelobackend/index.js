@@ -1,6 +1,7 @@
+require('dotenv').config()
+
 const express = require('express')
 const app = express()
-require('dotenv').config()
 
 const Person = require('./models/person')
 
@@ -36,10 +37,10 @@ app.get('/', (request, response) => {
 
 app.get('/info', (request, response) => {
     var d = new Date()
-    console.log(Person.countDocuments({}));
-    
-    response.send(`<p>Phonebook has info for 2 people</p>
-        <p>${d}</p>`)
+    Person.find({}).then(people => {
+      console.log(people);
+      response.send(`<p>Phonebook has info for ${people.length} people</p>
+        <p>${d}</p>`)})
 })
 
 app.get('/api/people', (request, response) => {
@@ -95,7 +96,9 @@ app.get('/api/people/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
-        response.json(person)
+        console.log(person);
+        console.log(person.toJSON());
+        response.send((person.toJSON()))
       } else {
         response.status(404).end()
       }
