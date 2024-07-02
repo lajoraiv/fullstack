@@ -8,7 +8,7 @@ const Person = require('./models/person')
 app.use(express.static('dist'))
 
 var morgan = require('morgan')
-morgan.token('type', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('type', function (req) { return JSON.stringify(req.body) })
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
@@ -39,58 +39,57 @@ app.get('/', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    var d = new Date()
-    Person.find({}).then(people => {
-      console.log(people);
-      response.send(`<p>Phonebook has info for ${people.length} people</p>
+  var d = new Date()
+  Person.find({}).then(people => {
+    console.log(people)
+    response.send(`<p>Phonebook has info for ${people.length} people</p>
         <p>${d}</p>`)})
 })
 
 app.get('/api/people', (request, response) => {
-    Person.find({}).then(people => {
+  Person.find({}).then(people => {
     response.json(people)
   })
 })
 
-  
 app.post('/api/people', (request, response, next) => {
-   const body = request.body
- 
-   const person = new Person({
-     name: body.name,
-     number: body.number,
-   })
- 
-   person.save().then(savedPerson => {
+  const body = request.body
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+
+  person.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error=>next(error))
+    .catch(error => next(error))
 })
-  
-app.put('/api/people/:id', (request, response, next) => {
-  const { name, number } = content.body
 
-  Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: `query` })
+app.put('/api/people/:id', (request, response, next) => {
+  const { name, number } = request.body
+
+  Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
     .catch(error => next(error))
 })
-  
-app.delete('/api/people/:id', (request, response) => {
- Person.findByIdAndDelete(request.params.id)
-  .then(result => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+
+app.delete('/api/people/:id', (request, response, next) => {
+  Person.findByIdAndDelete(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.get('/api/people/:id', (request, response, next) => {
   Person.findById(request.params.id)
     .then(person => {
       if (person) {
-        console.log(person);
-        console.log(person.toJSON());
+        console.log(person)
+        console.log(person.toJSON())
         response.send((person.toJSON()))
       } else {
         response.status(404).end()

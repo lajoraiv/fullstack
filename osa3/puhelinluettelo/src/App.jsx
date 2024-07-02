@@ -45,18 +45,18 @@ const App = () => {
           personService
             .update(id, personObject).then(returnedPerson => {
               setPersons(persons.map(person => person.id !== id ? person : returnedPerson ))
+              setSuccessMessage(`${newName}'s number changed to ${newNumber}`)
+              setTimeout(() => {setSuccessMessage(null)}, 5000)
             })
             .catch(error => {
-              console.log("failed to replace the number", error)
-              setErrorMessage(`Information of ${newName} has already been removed from the server.`)
+              console.log("failed to replace the number", error.response.data.error)
+              setErrorMessage(`failed to replace the number`)
               setTimeout(() => {setErrorMessage(null)}, 5000)
             })
         }
         setNewName('')
         setNewNumber('')
         matchFound = true
-        setSuccessMessage(`${newName}'s number changed to ${newNumber}`)
-        setTimeout(() => {setSuccessMessage(null)}, 5000)
         return
       }
     }
@@ -65,16 +65,16 @@ const App = () => {
         .create(personObject)
           .then(returnedPerson => {
             setPersons(persons.concat(returnedPerson))
+            setSuccessMessage(`Added ${newName}`)
+            setTimeout(() => {setSuccessMessage(null)}, 5000)
             setNewName('')
             setNewNumber('')
           })
           .catch(error => {
-            console.log("failed to add new person", error)
-            setErrorMessage(`Could not add ${newName} to phonebook.`)
+            console.log("failed to add new person", error.response.data.error)
+            setErrorMessage(`${error.response.data.error}`)
             setTimeout(() => {setErrorMessage(null)}, 5000)
           })
-        setSuccessMessage(`Added ${newName}`)
-        setTimeout(() => {setSuccessMessage(null)}, 5000)
     }
   }
 
