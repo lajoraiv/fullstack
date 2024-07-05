@@ -1,8 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1hdGlhcyIsImlkIjoiNjY4N2UzM2JkNWQ0ZGZmZmU3MGFmMTJiIiwiaWF0IjoxNzIwMTgxNjc2fQ.3rhQJ9qlu1Kvy-tnBABRfp07Z1ZLpXKpVEjkGpqlcWM
 
 {
 
-    "title": "Koiran pesun vaikeudet", "author": "Matti Meikäläinen", "url": "https://myspace.com/mattimeikalainen/peseminenonkivaa", "likes": 25,  "userId": "6687d0ae7f81a358356f0237"
+    "title": "Kirjautumisen Vaikeudet", "author": "Matias Meikäläinen", "url": "https://myspace.com/matiasmeikalainen/loginissues", "likes": 2,  "userId": "6687e33bd5d4dfffe70af12b"
 
 }
