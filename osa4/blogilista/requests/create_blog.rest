@@ -3,6 +3,6 @@ Content-Type: application/json
 
 {
 
-    "title": "String", "author": "String", "url": "String", "likes": 1
+    "title": "Koiran pesun vaikeudet", "author": "Matti Meikäläinen", "url": "https://myspace.com/mattimeikalainen/peseminenonkivaa", "likes": 25,  "userId": "6687d0ae7f81a358356f0237"
 
 }
