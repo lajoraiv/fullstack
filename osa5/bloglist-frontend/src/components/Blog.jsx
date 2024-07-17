@@ -36,20 +36,20 @@ const Blog = ({ blog, createLike, removeBlog, userName }) => {
   if (typeof blog.user !== 'undefined') userWhoAdded = blog.user.name
 
   if (!showAll) return(
-    <div style={blogStyle}>
+    <li style={blogStyle} className='blog'>
       {blog.title} {blog.author}
       <button onClick={() => setShowAll(!showAll)}>show</button>
-    </div>
+    </li>
   )
 
   if (showAll) return(
-    <div style={blogStyle}>
+    <li style={blogStyle} className='blog'>
       {blog.title} {blog.author} <button onClick={() => setShowAll(!showAll)}>hide</button><br></br>
       {blog.url}<br></br>
       {blog.likes}<button onClick={addLike}>like</button><br></br>
       {userWhoAdded}<br></br>
       <RemoveButton id={blog.id}/>
-    </div>
+    </li>
   )
 }
 
