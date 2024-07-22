@@ -43,7 +43,7 @@ const Blog = ({ blog, createLike, removeBlog, userName }) => {
   )
 
   if (showAll) return(
-    <li style={blogStyle} className='blog'>
+    <li style={blogStyle} className='blog' data-testid='unopenedblog'>
       {blog.title} {blog.author} <button onClick={() => setShowAll(!showAll)}>hide</button><br></br>
       {blog.url}<br></br>
       {blog.likes}<button onClick={addLike}>like</button><br></br>
